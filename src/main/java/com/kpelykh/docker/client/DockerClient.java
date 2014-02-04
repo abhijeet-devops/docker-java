@@ -314,9 +314,19 @@ public class DockerClient
     }
 
 
-    public ContainerCreateResponse createContainer(ContainerConfig config) throws DockerException {
+    public ContainerCreateResponse createContainer(ContainerConfig config,String name) throws DockerException {
 
-        WebResource webResource = client.resource(restEndpointUrl + "/containers/create");
+    //WebResource webResource = client.resource(restEndpointUrl + "/containers/create");
+    	
+    	//AV Change - START
+    	//WebResource webResource = client.resource(restEndpointUrl + "/containers/create");
+    	
+    	MultivaluedMap<String,String> params = new MultivaluedMapImpl();
+    	if(name != null){
+    		params.add("name", name);
+    	}
+        WebResource webResource = client.resource(restEndpointUrl + "/containers/create").queryParams(params);
+      //AV Change - END
 
         try {
             LOGGER.trace("POST: " + webResource.toString());
@@ -635,20 +645,20 @@ public class DockerClient
             FileUtils.copyFileToDirectory(dockerFile, tmpDockerContextFolder);
 
             for (String cmd : dockerFileContent) {
-                if (StringUtils.startsWithIgnoreCase(cmd.trim(), "ADD")) {
+                if (StringUtils.startsWith(cmd.trim(), "ADD")) {
                     String addArgs[] = StringUtils.split(cmd, " \t");
                     if (addArgs.length != 3) {
                         throw new DockerException(String.format("Wrong format on line [%s]", cmd));
                     }
 
                     File src = new File(addArgs[1]);
-                    if (!src.isAbsolute()) {
+                   /* if (!src.isAbsolute()) {
                         src = new File(dockerFolder, addArgs[1]).getCanonicalFile();
                     }
 
                     if (!src.exists()) {
                         throw new DockerException(String.format("Sorce file %s doesnt' exist", src));
-                    }
+                    }*/
                     if (src.isDirectory()) {
                         FileUtils.copyDirectory(src, tmpDockerContextFolder);
                     } else {

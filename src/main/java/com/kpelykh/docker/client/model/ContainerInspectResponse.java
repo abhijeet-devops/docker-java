@@ -60,8 +60,19 @@ public class ContainerInspectResponse {
 
     @JsonProperty("Driver")
     private String driver;
+    
+    @JsonProperty("HostConfig")
+    private HostConfig hostConfig;
 
-    public String getDriver() {
+    public HostConfig getHostConfig() {
+		return hostConfig;
+	}
+
+	public void setHostConfig(HostConfig hostConfig) {
+		this.hostConfig = hostConfig;
+	}
+
+	public String getDriver() {
         return driver;
     }
 
@@ -153,10 +164,8 @@ public class ContainerInspectResponse {
         @JsonProperty("IPPrefixLen") public int ipPrefixLen;
         @JsonProperty("Gateway") public String gateway;
         @JsonProperty("Bridge") public String bridge;
-        // Deprecated - can we remove?
-//        @JsonProperty("PortMapping") public Map<String,Map<String, String>> portMapping;
-        // FIXME Is this the right type? -BJE
-        @JsonProperty("Ports") public Map<String, String> ports;
+        @JsonProperty("PortMapping") public Map<String,Map<String, String>> portMapping;
+        @JsonProperty("Ports") public Ports ports;
 
         @Override
         public String toString() {

@@ -37,6 +37,7 @@ public class ContainerConfig {
     @JsonProperty("Domainname")   private String domainName = "";
     // FIXME Is this the right type? -BJE
     @JsonProperty("ExposedPorts")   private Map<String, ?> exposedPorts;
+    
 
     public Map<String, ?> getExposedPorts() {
         return exposedPorts;

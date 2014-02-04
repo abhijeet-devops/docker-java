@@ -27,7 +27,7 @@ public class Ports {
 
 	private final Map<String, Port> ports = new HashMap<String, Port>();
 
-    private Ports() { }
+    public Ports() { }
 
     public void addPort(Port port) {
         ports.put(port.getPort(), port);

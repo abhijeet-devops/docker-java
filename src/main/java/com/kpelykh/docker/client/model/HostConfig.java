@@ -2,6 +2,8 @@ package com.kpelykh.docker.client.model;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Konstantin Pelykh (kpelykh@gmail.com)
@@ -17,50 +19,24 @@ public class HostConfig {
 
     @JsonProperty("LxcConf")
     private LxcConf[] lxcConf;
-    
+
+
     @JsonProperty("Links")
     private String[] links;
-    
+
     @JsonProperty("PortBindings")
     private Ports portBindings;
-    
-	@JsonProperty("Privileged")
+
+    @JsonProperty("Privileged")
     private boolean privileged;
-    
+
     @JsonProperty("PublishAllPorts")
     private boolean publishAllPorts;
 
-    public String[] getLinks() {
-		return links;
-	}
-
-	public void setLinks(String[] links) {
-		this.links = links;
-	}
-
-	public boolean isPrivileged() {
-		return privileged;
-	}
-
-	public void setPrivileged(boolean privileged) {
-		this.privileged = privileged;
-	}
-
-	public boolean isPublishAllPorts() {
-		return publishAllPorts;
-	}
-
-	public void setPublishAllPorts(boolean publishAllPorts) {
-		this.publishAllPorts = publishAllPorts;
-	}
-
-	public HostConfig(String[] binds) {
-        this.binds = binds;
-    }
-	
-	public HostConfig() {
+    public HostConfig() {
         this.binds = null;
     }
+
 
     public String[] getBinds() {
         return binds;
@@ -85,14 +61,51 @@ public class HostConfig {
     public void setLxcConf(LxcConf[] lxcConf) {
         this.lxcConf = lxcConf;
     }
-    
-    public Ports getPortBindings() {
-		return portBindings;
-	}
 
-	public void setPortBindings(Ports portBindings) {
-		this.portBindings = portBindings;
-	}
+    public String[] getLinks() {
+        return links;
+    }
+
+    public void setLinks(String[] links) {
+        this.links = links;
+    }
+
+    public Ports getPortBindings() {
+        return portBindings;
+    }
+
+    public void setPortBindings(Ports portBindings) {
+        this.portBindings = portBindings;
+    }
+
+    public boolean isPrivileged() {
+        return privileged;
+    }
+
+    public void setPrivileged(boolean privileged) {
+        this.privileged = privileged;
+    }
+
+    public boolean isPublishAllPorts() {
+        return publishAllPorts;
+    }
+
+    public void setPublishAllPorts(boolean publishAllPorts) {
+        this.publishAllPorts = publishAllPorts;
+    }
+
+    @Override
+    public String toString() {
+        return "HostConfig{" +
+                "binds=" + Arrays.toString(binds) +
+                ", containerIDFile='" + containerIDFile + '\'' +
+                ", lxcConf=" + Arrays.toString(lxcConf) +
+                ", links=" + Arrays.toString(links) +
+                ", portBindings=" + portBindings +
+                ", privileged=" + privileged +
+                ", publishAllPorts=" + publishAllPorts +
+                '}';
+    }
 
     public class LxcConf {
         @JsonProperty("Key")
@@ -101,20 +114,30 @@ public class HostConfig {
         @JsonProperty("Value")
         public String value;
 
+        public LxcConf(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public LxcConf() {
+        }
+
         public String getKey() {
             return key;
         }
 
-        public void setKey(String key) {
+        public LxcConf setKey(String key) {
             this.key = key;
+            return this;
         }
 
         public String getValue() {
             return value;
         }
 
-        public void setValue(String value) {
+        public LxcConf setValue(String value) {
             this.value = value;
+            return this;
         }
 
     }

@@ -1,16 +1,13 @@
 package com.kpelykh.docker.client.model;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.ObjectCodec;
+import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.node.NullNode;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,27 +20,27 @@ import java.util.Map;
 @JsonDeserialize(using=Ports.Deserializer.class)
 @JsonSerialize(using=Ports.Serializer.class)
 public class Ports {
-    
 
-	private final Map<String, Port> ports = new HashMap<String, Port>();
+
+    private final Map<String, Port> ports = new HashMap<String, Port>();
 
     public Ports() { }
 
     public void addPort(Port port) {
         ports.put(port.getPort(), port);
     }
-    
+
     @Override
     public String toString(){
-    	return ports.toString();
+        return ports.toString();
     }
-    
+
     public Map<String, Port> getAllPorts(){
-    	return ports;
+        return ports;
     }
 
     public static class Port{
-    	
+
         private final String scheme;
         private final String port;
         private final String hostIp;
@@ -63,7 +60,7 @@ public class Ports {
         public String getPort() {
             return port;
         }
-        
+
         public String getHostIp() {
             return hostIp;
         }
@@ -92,42 +89,43 @@ public class Ports {
     public static class Deserializer extends JsonDeserializer<Ports> {
         @Override
         public Ports deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        	
+
             Ports out = new Ports();
             ObjectCodec oc = jsonParser.getCodec();
             JsonNode node = oc.readTree(jsonParser);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.getFields(); it.hasNext();) {
-                
-            	Map.Entry<String, JsonNode> field = it.next();
-                String hostIp = field.getValue().get(0).get("HostIp").getTextValue();
-                String hostPort = field.getValue().get(0).get("HostPort").getTextValue();
-                out.addPort(Port.makePort(field.getKey(), hostIp, hostPort));
 
+                Map.Entry<String, JsonNode> field = it.next();
+                if (!field.getValue().equals(NullNode.getInstance())) {
+                    String hostIp = field.getValue().get(0).get("HostIp").getTextValue();
+                    String hostPort = field.getValue().get(0).get("HostPort").getTextValue();
+                    out.addPort(Port.makePort(field.getKey(), hostIp, hostPort));
+                }
             }
             return out;
         }
     }
-    
+
     public static class Serializer extends JsonSerializer<Ports> {
 
-		@Override
-		public void serialize(Ports ports, JsonGenerator jsonGen,
-				SerializerProvider serProvider) throws IOException, JsonProcessingException {
+        @Override
+        public void serialize(Ports ports, JsonGenerator jsonGen,
+                              SerializerProvider serProvider) throws IOException, JsonProcessingException {
 
-			jsonGen.writeStartObject();//{
-			for(String portKey : ports.getAllPorts().keySet()){
-				Port p = ports.getAllPorts().get(portKey);
-				jsonGen.writeFieldName(p.getPort() + "/" + p.getScheme());
-				jsonGen.writeStartArray();
-				jsonGen.writeStartObject();
-				jsonGen.writeStringField("HostIp", p.hostIp);
-				jsonGen.writeStringField("HostPort", p.hostPort);
-				jsonGen.writeEndObject();
-				jsonGen.writeEndArray();
-			}
-			jsonGen.writeEndObject();//}
-		}
+            jsonGen.writeStartObject();//{
+            for(String portKey : ports.getAllPorts().keySet()){
+                Port p = ports.getAllPorts().get(portKey);
+                jsonGen.writeFieldName(p.getPort() + "/" + p.getScheme());
+                jsonGen.writeStartArray();
+                jsonGen.writeStartObject();
+                jsonGen.writeStringField("HostIp", p.hostIp);
+                jsonGen.writeStringField("HostPort", p.hostPort);
+                jsonGen.writeEndObject();
+                jsonGen.writeEndArray();
+            }
+            jsonGen.writeEndObject();//}
+        }
 
-	}
+    }
 
 }

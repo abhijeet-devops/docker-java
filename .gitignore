@@ -18,3 +18,5 @@ target
 
 # Ignore all log files
 *.log
+
+test-output/

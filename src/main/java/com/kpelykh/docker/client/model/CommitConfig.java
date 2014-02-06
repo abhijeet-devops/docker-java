@@ -53,55 +53,33 @@ public class CommitConfig {
         return run;
     }
 
-    private CommitConfig(Builder b) {
-        this.container = b.container;
-        this.repo = b.repo;
-        this.tag = b.tag;
-        this.message = b.message;
-        this.author = b.author;
-        this.run = b.run;
+    public CommitConfig setRepo(String repo) {
+        this.repo = repo;
+        return this;
     }
 
-    public static class Builder implements IBuilder<CommitConfig> {
-        private String container;
-        private String repo;
-        private String tag;
-        private String message;
-        private String author;
-        private String run;
+    public CommitConfig setTag(String tag) {
+        this.tag = tag;
+        return this;
+    }
 
-        public Builder(String containerId) {
-            this.container = containerId;
-        }
+    public CommitConfig setMessage(String message) {
+        this.message = message;
+        return this;
+    }
 
-        public Builder repo(String repo) {
-            this.repo = repo;
-            return this;
-        }
+    public CommitConfig setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
 
-        public Builder tag(String tag) {
-            this.tag = tag;
-            return this;
-        }
+    public CommitConfig setRun(String run) {
+        this.run = run;
+        return this;
+    }
 
-        public Builder message(String message) {
-            this.message = message;
-            return this;
-        }
-
-        public Builder author(String author) {
-            this.author = author;
-            return this;
-        }
-
-        public Builder run(String run) {
-            this.run = run;
-            return this;
-        }
-
-        public CommitConfig build() {
-            return new CommitConfig(this);
-        }
+    public CommitConfig(String container) {
+        this.container = container;
     }
 
 }
